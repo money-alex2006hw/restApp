@@ -9,7 +9,7 @@
 #import "Locations.h"
 #import "Location.h"
 
-static NSString* const kBaseURL = @"http://localhost:3000/";
+static NSString* const kBaseURL = @"http://10.101.0.100:3000/";
 static NSString* const kLocations = @"locations";
 static NSString* const kFiles = @"files";
 
