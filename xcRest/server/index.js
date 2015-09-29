@@ -1,6 +1,8 @@
 var http = require('http'),
     express = require('express'),
     path = require('path'),
+    assert = require('assert'),
+    bodyParser = require('body-parser'),
     MongoClient = require('mongodb').MongoClient,
     Server = require('mongodb').Server,
     CollectionDriver = require('./collectionDriver').CollectionDriver,
@@ -10,20 +12,14 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.bodyParser()); // <-- add
+app.use(bodyParser()); // <-- add
 
-var mongoHost = '10.101.0.100';
-var mongoPort = 27017;
+var mongoURI = 'mongodb://10.101.0.100:27017/restify';
 var fileDriver;  //<--
 var collectionDriver;
 
-var mongoClient = new MongoClient(new Server(mongoHost, mongoPort));
-mongoClient.open(function(err, mongoClient) {
-  if (!mongoClient) {
-      console.error("Error! Exiting... Must start MongoDB first");
-      process.exit(1);
-  }
-  var db = mongoClient.db("ios");
+MongoClient.connect(mongoURI, function(err, db) {
+  assert.equal(null, err);
 
   fileDriver = new FileDriver(db); //<--
   collectionDriver = new CollectionDriver(db);
