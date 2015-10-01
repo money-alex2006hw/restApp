@@ -14,11 +14,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(bodyParser()); // <-- add
 
-var mongoURI = 'mongodb://10.101.0.100:27017/restify';
+var mongoDB = process.env.MONGODB || 'mongodb://10.101.0.100:27017/restify';
 var fileDriver;  //<--
 var collectionDriver;
 
-MongoClient.connect(mongoURI, function(err, db) {
+MongoClient.connect(mongoDB, function(err, db) {
   assert.equal(null, err);
 
   fileDriver = new FileDriver(db); //<--
@@ -28,7 +28,7 @@ MongoClient.connect(mongoURI, function(err, db) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function (req, res) {
-  res.send('<html><body><h1>Hello World</h1></body></html>');
+    res.sendFile(__dirname + '/public/api.html');
 });
 
 app.post('/files', function(req,res) {fileDriver.handleUploadRequest(req,res);});
